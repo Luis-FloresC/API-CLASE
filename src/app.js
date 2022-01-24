@@ -9,7 +9,8 @@ app.use(express.json());
 app.set('json spaces', 2);
 
 
-app.use('/', require('./rutas/index'));
+app.use('/api/', require('./rutas/index'));
+app.use('/api/personas/', require('./rutas/rutasPersonas'));
 
 
 app.listen(app.get('port'), () => {
