@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
 const db = new sequelize(
-    'desofiw',
+    'medi',
     'root',
     'luis1234',
     {
