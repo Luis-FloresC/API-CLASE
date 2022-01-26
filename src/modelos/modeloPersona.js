@@ -1,6 +1,11 @@
+//Declaracion para utilizar el paquete sequelize
 const sequelize = require("sequelize");
+//Guardamos la configuracion de nuestra base de datos 
 const db = require("../configuracion/db");
+//Paqute para encriptamiento de contraseña
 const bcrypt = require("bcrypt");
+//declaramos el modelo especificando cada campo con su longitud y si permite null de la tabla 
+//especificamente de personas
 const Personas = db.define(
   "Personas",
   {
@@ -38,4 +43,5 @@ const Personas = db.define(
   }
 );
 
+//Exportamos el modulo de personas
 module.exports = Personas;
