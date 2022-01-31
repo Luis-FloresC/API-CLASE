@@ -14,6 +14,7 @@ app.set('json spaces', 2);
 //Declaramos las rutas que vamos a usar
 app.use('/api/', require('./rutas/index'));
 app.use('/api/personas/', require('./rutas/rutasPersonas'));
+app.use('/api/tipos/', require('./rutas/rutasTipos'));
 
 //Inicializamos el servidor
 app.listen(app.get('port'), () => {

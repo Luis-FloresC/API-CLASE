@@ -89,7 +89,48 @@ exports.Editar = async (req, res) => {
             })
             .catch((error) => {
                console.log(error);
-               res.send("Ocurrio un error");
+               res.send("Ocurrió un error");
+            });
+      }
+   }
+};
+
+exports.ELiminar = async (req, res) => {
+   const { id } = req.query;
+
+
+   if (!id) {
+      console.log("Todos los campos son obligatorios");
+      res.send("Todos los campos son obligatorios");
+   } else {
+      const BuscarPersona = await modeloPersona.findOne({
+         where: {
+            id: id,
+         },
+      });
+
+      if (!BuscarPersona) {
+         res.send("La persona no se encuentra registrada");
+         console.log("La persona no se encuentra registrada");
+      } else {
+
+         await BuscarPersona.destroy({
+            where:{
+               id:id
+            }
+         }).then((data) => {
+               console.log(data);
+               var info =
+                  "La persona: " +
+                  data.dataValues.nombre +
+                  " " +
+                  data.dataValues.apellido +
+                  " se eliminaron los datos con éxito";
+               res.send(info);
+            })
+            .catch((error) => {
+               console.log(error);
+               res.send("Ocurrió un error");
             });
       }
    }
