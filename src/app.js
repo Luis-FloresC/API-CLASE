@@ -15,6 +15,7 @@ app.set('json spaces', 2);
 app.use('/api/', require('./rutas/index'));
 app.use('/api/personas/', require('./rutas/rutasPersonas'));
 app.use('/api/tipos/', require('./rutas/rutasTipos'));
+app.use('/api/usuario/', require('./rutas/rutasUsuario'));
 
 //Inicializamos el servidor
 app.listen(app.get('port'), () => {
