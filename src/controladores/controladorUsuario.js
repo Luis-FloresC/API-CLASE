@@ -1,6 +1,6 @@
 //Declramos la variable para utilizar el modelo
 const modeloUsuario = require("../modelos/modeloUsuario");
-
+const { validationResult } = require("express-validator");
 
 //Metodo para obtner la lista de todos los registros de la base de datos
 exports.lista = async (req, res) => {
@@ -10,37 +10,50 @@ exports.lista = async (req, res) => {
     //  console.log(listPersonas);
 };
 
-
 //Metodo para guardar los datos en nuestra base de datos
 exports.guardar = async (req, res) => {
-    const { personas_id, login, correo, contrasena, estado, fallidos, pin, tipo } = req.body;
-
-    if (!personas_id || !login || !correo || !contrasena) {
-        console.log("Todos los campos son obligatorios");
-        res.send("Todos los campos son obligatorios");
+    const validacion = validationResult(req);
+    if (!validacion.isEmpty()) {
+        console.log(validacion.array());
+        res.json(validacion.array());
     } else {
-        await modeloUsuario
-            .create({ ...req.body })
-            .then((data) => {
-                console.log(data);
-                var info =
-                    "El Usuario: " + data.dataValues.login + " se registro con éxito";
-                res.send(info);
-            })
-            .catch((error) => {
-                console.log(error);
-                var info = "no se pudo guardar";
-                res.send(info);
-            });
-    }
+        const {
+            personas_id,
+            login,
+            correo,
+            contrasena,
+            estado,
+            fallidos,
+            pin,
+            tipo,
+        } = req.body;
 
+        if (!personas_id || !login || !correo || !contrasena) {
+            console.log("Todos los campos son obligatorios");
+            res.send("Todos los campos son obligatorios");
+        } else {
+            await modeloUsuario
+                .create({ ...req.body })
+                .then((data) => {
+                    console.log(data);
+                    var info =
+                        "El Usuario: " + data.dataValues.login + " se registro con éxito";
+                    res.send(info);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    var info = "no se pudo guardar";
+                    res.send(info);
+                });
+        }
+    }
     //  console.log(listPersonas);
 };
 
 exports.Editar = async (req, res) => {
     const { id } = req.query;
     try {
-        console.log(id);
+       // console.log(id);
 
         const existsUsuario = await modeloUsuario.findByPk(id);
         console.log(existsUsuario);
@@ -53,15 +66,12 @@ exports.Editar = async (req, res) => {
             mensaje: "Registro actualizado",
             ID: id,
             DatosActualizados: req.body,
-            DatosAnteriores: existsUsuario
+            DatosAnteriores: existsUsuario,
         });
-
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
-
 };
-
 
 /*
 //Metodo para editar datos de algun registro en especifico
@@ -107,39 +117,34 @@ exports.Editar = async (req, res) => {
 
 */
 
-
 exports.ELiminar = async (req, res) => {
-   const { id } = req.query;
+    const { id } = req.query;
 
+    if (!id) {
+        console.log("Se enviaron los datos incompletos...");
+        res.send("Se enviaron los datos incompletos...");
+    } else {
+        const BuscarUsuario = await modeloUsuario.findByPk(id);
 
-   if (!id) {
-      console.log("Se enviaron los datos incompletos...");
-      res.send("Se enviaron los datos incompletos...");
-   } else {
-      const BuscarUsuario = await modeloUsuario.findByPk(id);
-
-      if (!BuscarUsuario) {
-         res.send("El Usuario no se encuentra registrado");
-         console.log("El Usuario no se encuentra registrado");
-      } else {
-
-         await BuscarUsuario.destroy({
-            where:{
-               id:id
-            }
-         }).then((data) => {
-               console.log(data);
-               var info =
-                  "El Usuario: " +
-                  data.dataValues.login +
-                  " se elimino con éxito";
-               res.send(info);
+        if (!BuscarUsuario) {
+            res.send("El Usuario no se encuentra registrado");
+            console.log("El Usuario no se encuentra registrado");
+        } else {
+            await BuscarUsuario.destroy({
+                where: {
+                    id: id,
+                },
             })
-            .catch((error) => {
-               console.log(error);
-               res.send("Ocurrió un error");
-            });
-      }
-   }
+                .then((data) => {
+                    console.log(data);
+                    var info =
+                        "El Usuario: " + data.dataValues.login + " se elimino con éxito";
+                    res.send(info);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.send("Ocurrió un error");
+                });
+        }
+    }
 };
-
