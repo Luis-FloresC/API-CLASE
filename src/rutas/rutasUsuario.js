@@ -1,10 +1,11 @@
 const { Router } = require('express');
 const router = Router();
 const controladorUsuario = require('../controladores/controladorUsuario');
+const controladorAuth = require('../controladores/controladorSesiones');
 const {body ,query } = require('express-validator');
 //Ruta Get para obtener la
 //lista de las personas alamcenadas en nuestra base de datos
-router.get('/listar',controladorUsuario.lista);
+router.get('/listar',controladorAuth.validarAutenticado,controladorUsuario.lista);
 
 /*
 Ruta post para guardar los datos en la base de datos en la tabla de personas

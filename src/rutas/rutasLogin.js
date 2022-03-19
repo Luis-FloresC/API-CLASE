@@ -17,6 +17,8 @@ router.post('/iniciosesion',
     controladorSesiones.incioSesion,
 );
 
+router.post('/recuperarContrasena',controladorSesiones.RecuperarCorreo);
+
 router.get('/error/', controladorSesiones.ValidarToken);
 
 module.exports = router;
